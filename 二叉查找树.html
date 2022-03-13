@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>二叉查找树</title>
+  </head>
+  <body>
+    <script>
+      // 什么是二叉查找树
+      /**
+      根节点上值比左子树上的所有节点的值都要大
+      比右子树上所有节点的值都要小
+      任意节点的左子树，右子树都是二叉查找树
+      没有值相等的节点
+
+      */
+      class Node {
+        data = null;
+        left = null;
+        right = null;
+        constructor(data) {
+          this.data = data;
+        }
+      }
+      class Tree {
+        root = null;
+        //插入数据
+        insert(data) {
+          let newNode = new Node(data);
+          if (!this.root) {
+            this.root = newNode;
+          }
+          let node = this.root;
+          // 迭代法
+          while (node) {
+            if (node.data > data) {
+              if (!node.left) {
+                node.left = newNode;
+                return;
+              } else {
+                node = node.left;
+              }
+            } else {
+              if (!node.right) {
+                node.right = newNode;
+                return;
+              } else {
+                node = node.right;
+              }
+            }
+          }
+        }
+        // 查找一个树是否存在树中
+        contain(data) {
+          if (!this.root) {
+            return false;
+          }
+          let node = this.root;
+          // 迭代写法
+          while (node) {
+            if (node.data === data) {
+              return true;
+              // node的值比要找的大，那么就在左子树上找
+            } else if (node.data > data) {
+              node = node.left;
+            } else if (node.data < data) {
+              node = node.right;
+            }
+          }
+          return false;
+        }
+
+        // 递归写法
+        has(data) {
+          if (!this.root) {
+            return false;
+          }
+          let node = this.root;
+          return hasNode(node);
+        }
+        haNode(node) {
+          // 首先要判断节点是不是存在
+          if (!node) {
+            return false;
+          }
+          if (node.data === data) {
+            return true;
+          }
+          if (node.data > data) {
+            return hasNode(node.left);
+          } else {
+            return hasNode(node.right);
+          }
+        }
+
+        // 找到最大值 ，最大值在最右边
+        max() {
+          let node = this.root;
+          while (node.right) {
+            node = node.right;
+          }
+          return node.data;
+        }
+
+        // 找最小值 最小值在最左边
+        min() {
+          let node = this.root;
+          while (node.left) {
+            node = node.left;
+          }
+          return node.data;
+        }
+
+        // 求树的高度 这是后序遍历的应用
+        height(node) {
+          if (!node) {
+            return 0;
+          }
+          let leftHeight = height(node.left);
+          let rightHeight = height(node.right);
+          let h = leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
+          return h;
+        }
+
+        //二叉查找树的中序遍历可以将数据升序排列
+        inOrder(node) {
+          this.inOrder(node.left);
+          console.log(node);
+          this.inOrder(node.right);
+        }
+
+        // 层次遍历二叉树，不断地入队，不断的出队，要结合队列数据结构
+        leverOrder() {
+          if (!this.root) {
+            return;
+          }
+          let list = [];
+          list.push(root);
+          while (list.length !== 0) {
+            let node = list.shift();
+            console.log(node);
+
+            if (node.left) {
+              list.push(node.left);
+            }
+            if (node.right) {
+              list.push(node.right);
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

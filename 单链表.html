@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>单链表</title>
+  </head>
+  <body>
+    <button id="button">button</button>
+    <script>
+      /**
+       * 什么是单链表
+       * 我的理解，链表中的每一个结点只有一个指针域，指向后继结点，
+       * 并且最后一个节点的指针域指向null
+       *
+       * */
+
+      // 单链表有什么特点
+      class Node {
+        data = null;
+        next = null;
+        constructor(data) {
+          this.data = data;
+        }
+      }
+      class LinkedList {
+        // 链表的长度
+        length = 0;
+        // 初始化为空，指向链表的第一个结点
+        head = null;
+
+        // 向链表中添加一个结点,向末尾添加数据
+        append(data) {
+          // 生成结点
+          const node = new Node(data);
+          // 当链表是空时，
+          if (this.head === null) {
+            this.head = node;
+          } else {
+            // 当链表长度大于0时，在链表的末尾添加
+            // 怎么获取到最后一个结点
+            let currentNode = this.head;
+            // 用一个循环不断获取下一个结点
+            while (currentNode.next !== null) {
+              currentNode = currentNode.next;
+            }
+            // 经过上面的while处理后 现在的currentNode 一定是最后一个元素
+            // 那么就可以赋值
+            currentNode.next = node;
+          }
+          this.length++;
+        }
+
+        // 向某个位置插入数据
+        insert(position, data) {
+          // 参数说明 position = 0 表示插入之后的节点位置是第一个，
+          // position= 1 表示插入之后元素的位置是第二个
+          // position 节点插入之后的下标的位置
+          if (position < 0 || position > this.length) {
+            return null;
+          }
+          // 待插入的节点
+          const newNode = new Node(data);
+          // 在头部插入节点
+          // 先让新元素的指针指向原来的第一个结点,
+          // 如果不这样做，将获取不到原来的第一个结点，指向原来第一个节点的指针就丢失
+          if (position === 0) {
+            newNode.next = this.head;
+            this.head = newNode;
+          } else {
+            // 先要获取插入的位置
+            let currentNode = this.head;
+            let i = 0;
+            while (currentNode.next !== null) {
+              // 循环一次就要加一次
+              i++;
+              currentNode = currentNode.next; // 这句话不能丢了 不断的获取下一个节点
+              if (i === position - 1) {
+                break;
+              }
+            }
+            // 在链表的中间插入某个元素
+            if (currentNode.next) {
+              newNode.next = currentNode.next;
+              currentNode.next = newNode;
+
+              // 表示在最末尾插入元素
+            } else if (!currentNode.next) {
+              currentNode.next = newNode;
+            }
+          }
+          this.length++;
+          return newNode;
+        }
+
+        /**
+         * 总结：如何在两个节点之间插入一个新的节点，
+         * 让新节点的指针指向后面的一个节点，然后再让前面的节点指向新的节点
+         *
+         * */
+
+        insert2(position, data) {
+          //  重构一下部分逻辑
+          //
+          if (this.length > position || position < 0) {
+            return null;
+          }
+          // this.length === position 表示在最后一个位置插入节点
+          const newNode = new Node(data);
+          if (position == 0) {
+            newNode.next = this.head;
+            this.head = newNode;
+          } else {
+            // refactor logic here
+            let currentNode = this.head;
+            let previousNode = null;
+            let index = 0;
+            while (index++ < position) {
+              // 先比较的，后加的
+              // position 是多少，
+              // 这个循环体就走几次，然后currentNode的下标就是position
+              //  这里用了一个算法技巧，就是快慢指针
+              previousNode = currentNode;
+              currentNode = currentNode.next;
+            }
+            // 所以在当前节点的和当前节点的上一个节点之前插入新的节点
+            newNode.next = currentNode;
+            previousNode.next = newNode;
+          }
+
+          this.length++;
+          return newNode;
+        }
+
+        // 获取指定位置的数据
+        getData(position) {
+          if (position >= this.length || position < 0) {
+            return null;
+          }
+          if (!this.head) {
+            return null;
+          }
+          let currentNode = this.head;
+
+          let index = 0;
+          while (index++ < position) {
+            // 先比较后加
+            // position 是多少，循环体就走几次，然后currentNode的下标就是position
+            currentNode = currentNode.next;
+          }
+          return currentNode.data;
+        }
+        // 我的逻辑
+        getData1(position) {
+          if (position >= this.length || position < 0) {
+            return null;
+          }
+          if (!this.head) {
+            return null;
+          }
+          let currentNode = this.head;
+
+          let index = 0;
+          while (currentNode.next !== null) {
+            // 这个if判断要放在前面
+            if (index === position) {
+              return currentNode.data;
+              // break;
+            }
+            currentNode = currentNode.next;
+            index++;
+          }
+          return currentNode.data;
+        }
+        // 总结：插入一个元素，或者删除一个元素，都要有两个指针指向前后两个节点
+        // 删除指定位置的节点
+        removeAt(position) {
+          // position数据不合理
+          if (position >= this.length || position < 0) {
+            return null;
+          }
+          if (!this.head) {
+            return null;
+          }
+          // 先获取position位置的元素
+          let currentNode = this.head;
+          let previousNode = null;
+          let index = 0;
+          while (currentNode.next !== null) {
+            if (index === position) {
+              if (position === 0) {
+                this.head = this.head.next;
+              } else {
+                previousNode.next = currentNode.next;
+              }
+              this.length--;
+              return;
+            }
+            index++; // 这一步不能少
+            // 注意这里 一定要将前一个节点先赋值 ，下一个节点后赋值
+            previousNode = currentNode;
+            currentNode = currentNode.next;
+          }
+
+          // 删除最后一个节点
+          previousNode.next = null;
+          this.length--;
+          return;
+        }
+
+        // 删除指定的数据的节点
+        // 如何删除两个节点中的那个节点
+        // 让前一个节点指向后一个节点的后一个节点，
+        remove(data) {
+          if (!this.head) {
+            return null;
+          }
+          let previousNode = null;
+          let currentNode = this.head;
+          // 防止找到最后还没有找到 currentNode是null,那么将会报错，
+          // 所以 currentNode 要存在
+          while (currentNode && currentNode.data !== data) {
+            previousNode = currentNode;
+            currentNode = currentNode.next;
+          }
+          // 有一种情况是找到了，退出循环，
+          // 有一种是循环到了最后一个元素，还么有找到
+          // 所以是 currentNode 是 null 就是找到了最后还么有找到,这种情况什么都不用做
+          // currentNode 不为 null 就是找到了
+          // 所以要分三种情况，
+          // previousNode 不存在  currentNode 存在
+          // previousNode 和currentNode都存在
+          // previousNode存在 currentNode不存在 表示 么有找到
+
+          if (!previousNode && currentNode) {
+            this.head = null;
+            this.length--;
+          } else if (previousNode && currentNode) {
+            previousNode.next = currentNode.next;
+            this.length--;
+          } else if (previousNode && !currentNode) {
+          }
+        }
+
+        // 找到某个节点 返回它的下标，找不到就返回-1
+        indexOf(data) {
+          if (!this.head) {
+            return -1;
+          }
+          let currentNode = this.head;
+          let index = 0;
+          // 从第一个元素开始找
+          while (currentNode.data !== data) {
+            currentNode = currentNode.next;
+            if (!currentNode) {
+              return -1;
+            }
+            index++;
+          }
+          return index;
+        }
+
+        // 链表的遍历
+      }
+    </script>
+    
+
+    <script>
+      // 运算符优先级
+      let index = 9;
+      let bool = index++ == 10;
+      console.log(bool);
+      console.log(index);
+      // while (++index < 10) {
+      //   console.log(index);
+      // }
+      // 测试代码
+      // 测试append功能
+      const linkedList = new LinkedList();
+      linkedList.append("aa");
+      linkedList.append("bb");
+      linkedList.append("cc");
+
+      // insert
+      linkedList.insert(0, "新插入的元素数据，位置要是第一位的");
+      linkedList.insert(linkedList.length, "这个元素的位置是最后有一个");
+      linkedList.insert(2, "这是第三个节点的位置");
+      console.log(linkedList);
+    </script>
+  </body>
+</html>

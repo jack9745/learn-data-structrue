@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>栈</title>
+  </head>
+  <body>
+    <script>
+      // 什么是栈，
+      // 栈是一种先进后出的数据结构
+      /**
+       * 栈只能在表的一端进行操作，
+       * 只能在同一端的最末尾添加元素，并且也只能在这一端的最末尾删除元素
+       * 这一端称为栈顶
+       *
+       *
+       * 假如我们有一个单链表，而且只能对链表的表尾节点进行操作，
+       * 而且操作也是插入一个新的节点，和删除最末尾的节点 两个操作，
+       * 而这样强限制性的链表就是我们说的栈结构
+       *
+       *
+       * 栈的实现
+       * 栈既可以用链表来实现，也可以用数组来实现*/
+
+      //  用链表来实现栈
+
+      // 先要设计节点的结构体
+      class Node {
+        data = null;
+        next = null;
+        constructor(data) {
+          this.data = data;
+        }
+      }
+
+      // 设计栈的结构体 count表示节点的个数，top指向栈顶元素
+      class Stack {
+        count = 0;
+
+        // top 永远指向栈顶元素
+        // 当栈为空时，指向null？？？？
+        // 我觉得像单链表中的head指针，指向第一个节点
+        // 要知道，top是指针，指向栈顶节点，top变量存储的是引用，不是具体的某个对象
+        // 每个节点的next指针也是指向某个节点
+        top = null;
+
+        // 入栈操作
+        // 入栈操作的逻辑，
+        /**
+         * 我们需要找到top指向的空间，然后创建一个新的节点，让这个节点的next指针指向
+         * top指针指向的空间，这样就让前后两个节点产生了联系，
+         * 注意这里不是占据了原来节点的位置
+         * 然后我们再移动top指针的指向，让top指针指向新的节点*/
+        push(data) {
+          let newNode = new Node(data);
+          newNode.next = this.top;
+          // top 永远指向栈顶节点
+          this.top = newNode;
+          this.count++;
+        }
+
+        // 删除操作，删除栈顶的元素即出栈操作
+        pop() {
+          if (!this.top) {
+            return null;
+          }
+          this.top = this.top.next;
+          this.count--;
+        }
+
+        // 判断栈是不是空
+        isEmpty() {
+          return this.count === 0;
+        }
+
+        // 获取栈顶元素
+        peek() {
+          return this.top.data;
+        }
+
+        // 遍历每个节点
+      }
+
+      // 如果栈的底层是数组来实现 该怎么实现
+      // 如果用数组来实现，那么栈底元素就是下标为0节点，栈顶元素就是length-1的节点
+      // 实现起来应该比较简单
+
+      // js中数组的方法 push和pop可以用来模拟栈的操作
+      // pop返回出栈的元素
+
+      // 栈的应用有哪些？
+      let expression = "{000{[]}}]000000";
+    </script>
+
+    <script>
+      // 测试代码
+      let stack = new Stack();
+      stack.push("aa");
+      stack.push("bb");
+      stack.push("cc");
+      stack.push("dd");
+      console.log(stack);
+    </script>
+  </body>
+</html>

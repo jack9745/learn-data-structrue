@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>队列</title>
+  </head>
+  <body>
+    <script>
+      /**
+       * 什么是队列
+       * 队列是一个先进先出的数据结构
+       * 队列是限定表在一端进行掺入，在表的另一端进行删除的数据结构
+       * 生活中例子就 好像两端都相通 水管
+       */
+      // 队头，队尾，
+      /**
+       * 先入队的元素就在队头
+       * 后入队的元素在队尾
+       */
+
+      // 队列的结构体设计 ,用链表来实现栈
+      // 节点结构体设置
+      class Node {
+        data = null;
+        next = null;
+        constructor(data) {
+          this.data = data;
+        }
+      }
+      // 队列结构体的设计
+      class Queue {
+        // 分别是两个指针，指向队头元素 和 队尾元素
+        front = null;
+        rear = null;
+        count = 0;
+        // 如果队列是空的,那么 front 和 rear 都是空的 表示一个空队列
+        // 入队操作
+        /**我们要先判断一下队列是否为空，如果队列是空的话，
+         * 我们需要将头指针和尾指针指向第一个节点
+         */
+
+        push(data) {
+          let newNode = new Node(data);
+          if (this.front === null) {
+            this.front = newNode;
+            this.rear = newNode;
+          } else {
+            this.rear.next = newNode;
+            this.rear = newNode;
+          }
+          this.count++;
+        }
+
+        // 出栈操作
+        shift() {
+          if (!this.front) {
+            return null;
+          }
+          if (this.front === this.rear) {
+            this.front = null;
+            this.rear = null;
+          } else {
+            this.front = this.front.next;
+          }
+          this.count--;
+        }
+
+        // 判断队列是否为空
+        isEmpty() {
+          return this.front === null;
+        }
+      }
+    </script>
+
+    <script>
+      // 测试代码
+      let queue = new Queue();
+      queue.push("aa");
+      queue.push("bb");
+      queue.push("cc");
+      queue.push("dd");
+      console.log(queue);
+    </script>
+  </body>
+</html>
