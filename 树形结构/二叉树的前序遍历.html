@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>二叉树的前序遍历</title>
+  </head>
+  <body>
+    <script>
+      // 二叉树的前序遍历
+      // 什么是二叉树的前序遍历
+      /**
+       * 前序遍历是先访问二叉树的根节点，再遍历左子树，然后遍历右子树
+       *
+       * 在思考的过程中，我们可以想象，将一颗子树想象成一个节点，左节点或者右节点
+       *
+       * 也要将一个节点想象成一颗树
+       * */
+      // 先设计结构 节点设计
+      class Node {
+        left = null;
+        right = null;
+        data = null;
+        constructor(data) {
+          this.data = data;
+        }
+      }
+
+      // 树设计
+      class Tree {
+        // root字段指向树的根
+        root = null;
+        // 前序遍历
+        preOrder(node) {
+          if (!node) {
+            return;
+          }
+          console.log(node);
+          this.preOrder(node.left);
+          this.preOrder(node.right);
+        }
+      }
+    </script>
+  </body>
+</html>
